@@ -1427,9 +1427,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "8.0.7",
           "Microsoft.Data.Sqlite": "8.0.7",
-          "Microsoft.NET.Test.Sdk": "17.10.0",
-          "Swashbuckle.AspNetCore": "6.6.2",
-          "xunit": "2.9.0"
+          "Swashbuckle.AspNetCore": "6.6.2"
         },
         "compile": {
           "bin/placeholder/SimpleWebServer.dll": {}
@@ -3565,6 +3563,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.AspNetCore.Mvc.Testing >= 8.0.7",
+      "Microsoft.Data.Sqlite >= 8.0.7",
       "Microsoft.NET.Test.Sdk >= 17.10.0",
       "SimpleWebServer >= 1.0.0",
       "xunit >= 2.9.0",
@@ -3618,6 +3617,10 @@
         "targetAlias": "net8.0",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Testing": {
+            "target": "Package",
+            "version": "[8.0.7, )"
+          },
+          "Microsoft.Data.Sqlite": {
             "target": "Package",
             "version": "[8.0.7, )"
           },

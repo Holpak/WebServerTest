@@ -1,10 +1,9 @@
 global using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit;
+global using Xunit;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 public class ApiTests : IClassFixture<WebApplicationFactory<Program>>
 {
