@@ -1,0 +1,8 @@
+/app/obj/Debug/net8.0/SimpleWebServer.csproj.AssemblyReference.cache
+/app/obj/Debug/net8.0/SimpleWebServer.GeneratedMSBuildEditorConfig.editorconfig
+/app/obj/Debug/net8.0/SimpleWebServer.AssemblyInfoInputs.cache
+/app/obj/Debug/net8.0/SimpleWebServer.AssemblyInfo.cs
+/app/obj/Debug/net8.0/SimpleWebServer.csproj.CoreCompileInputs.cache
+/app/obj/Debug/net8.0/SimpleWebServer.MvcApplicationPartsAssemblyInfo.cs
+/app/obj/Debug/net8.0/SimpleWebServer.MvcApplicationPartsAssemblyInfo.cache
+/app/obj/Debug/net8.0/SimpleWebServer.sourcelink.json
