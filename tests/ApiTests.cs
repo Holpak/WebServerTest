@@ -38,6 +38,14 @@ public class ApiTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
+    public async Task Edit_With_Invalid_Id_Returns_NotFound()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.PutAsync("/edit/999?newState=updated", null);
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task History_Returns_Ok()
     {
         var client = _factory.CreateClient();
@@ -56,5 +64,25 @@ public class ApiTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(2, history.Count);
         Assert.Equal("created", history[0].State);
         Assert.Equal("updated", history[1].State);
+    }
+
+    [Fact]
+    public async Task History_With_Invalid_Id_Returns_NotFound()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.GetAsync("/history/999");
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Edit_With_Missing_NewState_Returns_BadRequest()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.PostAsync("/create", null);
+        var content = await response.Content.ReadAsStringAsync();
+        var id = JsonSerializer.Deserialize<int>(content);
+
+        var editResponse = await client.PutAsync($"/edit/{id}", null);
+        Assert.Equal(System.Net.HttpStatusCode.BadRequest, editResponse.StatusCode);
     }
 }

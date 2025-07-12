@@ -30,14 +30,18 @@ public class Program
 
         app.MapPut("/edit/{id}", async (int id, string newState, DatabaseService db) =>
         {
-            await db.UpdateObjectStateAsync(id, newState);
-            return Results.Ok();
+            if (string.IsNullOrEmpty(newState))
+            {
+                return Results.BadRequest("newState is required");
+            }
+            var success = await db.UpdateObjectStateAsync(id, newState);
+            return success ? Results.Ok() : Results.NotFound();
         });
 
         app.MapGet("/history/{id}", async (int id, DatabaseService db) =>
         {
             var history = await db.GetObjectHistoryAsync(id);
-            return Results.Ok(history);
+            return history != null ? Results.Ok(history) : Results.NotFound();
         });
 
         app.Run();
@@ -90,7 +94,7 @@ public class DatabaseService
         return (int)id;
     }
 
-    public async Task UpdateObjectStateAsync(int id, string newState)
+    public async Task<bool> UpdateObjectStateAsync(int id, string newState)
     {
         using var connection = new SqliteConnection(ConnectionString);
         await connection.OpenAsync();
@@ -102,9 +106,15 @@ public class DatabaseService
         ";
         command.Parameters.AddWithValue("$newState", newState);
         command.Parameters.AddWithValue("$id", id);
-        await command.ExecuteNonQueryAsync();
+        var rowsAffected = await command.ExecuteNonQueryAsync();
+
+        if (rowsAffected == 0)
+        {
+            return false;
+        }
 
         await AddHistoryEntryAsync(id, newState, connection);
+        return true;
     }
 
     public async Task<List<StateHistoryEntry>> GetObjectHistoryAsync(int id)
@@ -115,8 +125,20 @@ public class DatabaseService
         var command = connection.CreateCommand();
         command.CommandText =
         @"
+            SELECT 1 FROM objects WHERE id = $id;
+        ";
+        command.Parameters.AddWithValue("$id", id);
+        var exists = await command.ExecuteScalarAsync();
+        if (exists == null)
+        {
+            return null;
+        }
+
+        command.CommandText =
+        @"
             SELECT change_id, state, timestamp FROM state_history WHERE object_id = $id ORDER BY change_id;
         ";
+        command.Parameters.Clear();
         command.Parameters.AddWithValue("$id", id);
 
         var history = new List<StateHistoryEntry>();
